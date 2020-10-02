@@ -18,7 +18,8 @@ class CreateSurvivorsTable extends Migration
             $table->string('name');
             $table->integer('age');
             $table->char('gender',1);
-            $table->string('location');
+            $table->string('latitude');
+            $table->string('longitude');
             $table->integer('contaminated_count')->default(0);
             $table->timestamps();
         });

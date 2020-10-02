@@ -11,7 +11,7 @@ class Survivor extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'age', 'gender', 'location', 'contaminated_count'];
+    protected $fillable = ['name', 'age', 'gender', 'latitude', 'longitude', 'contaminated_count'];
 
     public function isContaminated()
     {
