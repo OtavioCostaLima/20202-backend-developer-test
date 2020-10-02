@@ -22,7 +22,7 @@ class SurvivorController extends Controller
      */
     public function index()
     {
-        return $this->survivor->find(1)->inventory()->get();
+        return $this->survivor->find(30)->inventory()->get();
         return $this->survivor->isContaminated();
     }
 
@@ -91,7 +91,13 @@ class SurvivorController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $location = $request->only(['latitude', 'longitude']);
+        try {
+            $this->survivor->find($id)->update($location);
+            return response()->json(['messagem' => 'Localização Atualizada Com Sucesso!'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 400);
+        }
     }
 
     /**
