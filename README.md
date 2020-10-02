@@ -1,61 +1,91 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
+# Backend Developer Coding Test
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/d/total.svg" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/v/stable.svg" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/license.svg" alt="License"></a>
-</p>
+Be sure to read **all** of this document carefully, and follow the guidelines within.
 
-## About Laravel
+## Problem Description
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+ZSSN (Zombie Survival Social Network). The world as we know it has fallen into an apocalyptic scenario. A laboratory-made virus is transforming human beings and animals into zombies, hungry for fresh flesh.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+You, as a zombie resistance member (and the last survivor who knows how to code), was designated to develop a system to share resources between non-infected humans.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Requirements
 
-## Learning Laravel
+You will develop a ***REST API*** (yes, we care about architecture design even in the midst of a zombie apocalypse!), which will store information about the survivors, as well as the resources they own.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+In order to accomplish this, the API must fulfill the following use cases:
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- **Add survivors to the database**
 
-## Laravel Sponsors
+  A survivor must have a *name*, *age*, *gender* and *last location (latitude, longitude)*.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+  A survivor also has an inventory of resources of their own property (which you need to declare when upon the registration of the survivor).
 
-### Premium Partners
+- **Update survivor location**
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[OP.GG](https://op.gg)**
+  A survivor must have the ability to update their last location, storing the new latitude/longitude pair in the base (no need to track locations, just replacing the previous one is enough).
 
-## Contributing
+- **Flag survivor as infected**
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+  In a chaotic situation like that, it's inevitable that a survivor may get contaminated by the virus.  When this happens, we need to flag the survivor as infected.
 
-## Code of Conduct
+  An infected survivor cannot trade with others, can't access/manipulate their inventory, nor be listed in the reports (infected people are kinda dead anyway, see the item on reports below).
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+  **A survivor is marked as infected when at least three other survivors report their contamination.**
 
-## Security Vulnerabilities
+  When a survivor is infected, their inventory items become inaccessible (they cannot trade with others).
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+- **Survivors cannot Add/Remove items from inventory**
 
-## License
+  Their belongings must be declared when they are first registered in the system. After that they can only change their inventory by means of trading with other survivors.
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+  The items allowed in the inventory are described above in the first feature.
+
+- **Trade items**:
+
+  Survivors can trade items among themselves.
+
+  To do that, they must respect the price table below, where the value of an item is described in terms of points.
+
+  Both sides of the trade should offer the same amount of points. For example, 1 Water and 1 Medication (1 x 4 + 1 x 2) is worth 6 ammunition (6 x 1) or 2 Food items (2 x 3).
+
+  The trades themselves need not to be stored, but the items must be transferred from one survivor to the other.
+
+| Item         | Points   |
+|--------------|----------|
+| 1 Water      | 4 points |
+| 1 Food       | 3 points |
+| 1 Medication | 2 points |
+| 1 Ammunition | 1 point  |
+
+- **Reports**
+
+  The API must offer the following reports:
+
+    1. Percentage of infected survivors.
+    1. Percentage of non-infected survivors.
+    3. Average amount of each kind of resource by survivor (e.g. 5 waters per survivor)
+    4. Points lost because of infected survivor.
+
+---------------------------------------
+
+## Notes
+
+1. Please use one of the following languages/frameworks: *PHP (Laravel)*.
+2. No authentication is needed (it's a zombie apocalypse, no one will try to hack a system while running from a horde of zombies);
+3. We still care about proper programming and architecture techniques, you must showcase that you're worthy of surving the zombie apocalypse through the sheer strength of your skills;
+4. Don't forget to make at least a minimal documentation of the API endpoints and how to use them;
+5. You must write at least some automated tests;
+6. From the problem description above you can either do a very bare bones solution or add optional features that are not described. Use your time wisely; the absolute optimal solution might take too long to be effective in the apocalypse, so you must come up with the best possible solution that will hold up within the least ammount of time and still be able to showcase your skills in order to prove your worth.
+7. Write concise and clear commit messages, splitting your changes in little pieces.
+
+## Q&A
+
+> Where should I send back the result when I'm done?
+
+Fork this repo and send us a pull request when you think you are done. We will note you about deadline directly.
+
+> What if I have a question?
+
+Just create a new issue in this repo and we will respond and get back to you quickly.
+
+**Original test written by [Akita](https://t.co/W47ODZTOAc)**
