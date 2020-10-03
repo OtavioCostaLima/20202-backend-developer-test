@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Survivor;
+use Illuminate\Support\Facades\DB;
 
 class SurvivorController extends Controller
 {
@@ -47,6 +48,8 @@ class SurvivorController extends Controller
         $survivor = $request->all() ?? null;
 
         $items = $survivor['items'];
+
+        DB::beginTransaction();
         try {
             $survivor = $this->survivor->create($survivor);
             foreach ($items as $item) {
@@ -54,9 +57,11 @@ class SurvivorController extends Controller
                     $item['item_id'] => ['quantity' => $item['quantity']]
                 ]);
             }
+            DB::commit();
             return response()->json(['messagem' => 'Sobrevivente Cadastrado Com Sucesso!'], 200);
         } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 400);
+            DB::rollback();
+            return response()->json(['error' => 'Algo deu errado. Confira se as informações estão corretas!'], 400);
         }
     }
 
@@ -96,7 +101,7 @@ class SurvivorController extends Controller
             $this->survivor->find($id)->update($location);
             return response()->json(['messagem' => 'Localização Atualizada Com Sucesso!'], 200);
         } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 400);
+            return response()->json(['error' => 'Algo deu errado. Confira se as informações estão corretas!'], 400);
         }
     }
 
@@ -120,7 +125,7 @@ class SurvivorController extends Controller
 
             $notifier = $this->survivor->find($notifier_id);   // Poderia ser pego da sessão de tivesse autenticação! 
             $survivor = $this->survivor->find($id);
-            
+
 
             if (is_null($notifier)) {
                 return response()->json(['error' => 'OPS! Identifique primeiro.'], 404);
