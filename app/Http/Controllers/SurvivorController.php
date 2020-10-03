@@ -22,8 +22,8 @@ class SurvivorController extends Controller
      */
     public function index()
     {
-        return $this->survivor->find(30)->inventory()->get();
-        return $this->survivor->isContaminated();
+        //  return $this->survivor->find(30)->inventory()->get();
+        return dd($this->survivor->find(4)->isContaminated());
     }
 
     /**
@@ -109,5 +109,38 @@ class SurvivorController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function notifyInfected(Request $request, $id)
+    {
+        $notifier_id = $request->notifier_id ?? null;
+        $notifications = new \App\Models\InfectedNotification();
+
+        try {
+
+            $notifier = $this->survivor->find($notifier_id);   // Poderia ser pego da sessão de tivesse autenticação! 
+            $survivor = $this->survivor->find($id);
+            
+
+            if (is_null($notifier)) {
+                return response()->json(['error' => 'OPS! Identifique primeiro.'], 404);
+            }
+
+            if (is_null($survivor)) {
+                return response()->json(['error' => 'OPS! Não encontramos esse sobrevivente nos registros.'], 404);
+            }
+
+            $notifications = $notifications->where('infected_id', '=', $survivor->id)->where('notifier_id', '=', $notifier_id)->first();
+
+            if (!is_null($notifications)) {
+                return response()->json(['message' => 'Você já marcou esse sobrevivente como infectado!'], 200);
+            }
+
+            $notifier->notifications()->attach($survivor->id);
+
+            return response()->json(['message' => 'Você marcou ' . $survivor->name . ' como infectado!'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Algo deu errado. Confira se as informações estão corretas!'], 400);
+        }
     }
 }

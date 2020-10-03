@@ -15,11 +15,16 @@ class Survivor extends Model
 
     public function isContaminated()
     {
-        return 'oi';
+        return $this->contaminated_count >= 3;
     }
 
     public function inventory()
     {
         return $this->belongsToMany('App\Models\Items', 'inventories', 'survivor_id', 'item_id')->withPivot('quantity');
+    }
+
+    
+    public function notifications() {
+        return $this->belongsToMany('App\Models\InfectedNotification', 'infected_notifications', 'notifier_id', 'infected_id');
     }
 }
