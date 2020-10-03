@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ReportController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SurvivorController;
@@ -24,6 +25,8 @@ Route::prefix('/v1')->group(function () {
     Route::post('/survivors', [SurvivorController::class, 'store']);
     Route::put('/survivors/{survivor_id}', [SurvivorController::class, 'update']);
     Route::post('/survivors/{survivor_id}/infected', [SurvivorController::class, 'notifyInfected']);
+    
+    Route::get('/reports/survivors', [ReportController::class, 'percentageSurvivors']);
 
     
 
