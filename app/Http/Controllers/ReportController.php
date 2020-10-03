@@ -40,11 +40,11 @@ class ReportController extends Controller
 
             if ($infected == 0) {
                 $noInfecteds =  $result->noInfecteds;
-                return response()->json(['count' => $noInfecteds], 200);
+                return response()->json(['percentage' => $noInfecteds], 200);
             }
 
             $infecteds = $result->infecteds;
-            return response()->json(['count' => $infecteds], 200);
+            return response()->json(['percentage' => $infecteds], 200);
         } catch (Exception $e) {
             return response()->json(['error' => 'Algo deu errado. Tente novamente mais tarde!'], 500);
         }
@@ -59,7 +59,7 @@ class ReportController extends Controller
             try {
                 $result = DB::table('inventories')->selectRaw('description, round(avg(quantity),2) as media')
                     ->join('items', 'items.id', '=', 'inventories.item_id')->groupBy('description')->get();
-                return response()->json(['count' => $result], 200);
+                return response()->json(['avg' => $result], 200);
             } catch (Exception $e) {
                 return response()->json(['error' => 'Algo deu errado. Tente novamente mais tarde!'], 500);
             }
