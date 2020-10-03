@@ -15,7 +15,14 @@ class Survivor extends Model
 
     public function isContaminated()
     {
-        return $this->contaminated_count >= 3;
+        return $this->inventory();
+    }
+
+    public function totalPoints()
+    {
+        return $this->find(1)->inventory()->get()->map(function ($item, $key) {
+            return $item->point * $item->pivot->quantity;
+        })->sum();
     }
 
     public function inventory()
@@ -23,8 +30,9 @@ class Survivor extends Model
         return $this->belongsToMany('App\Models\Items', 'inventories', 'survivor_id', 'item_id')->withPivot('quantity');
     }
 
-    
-    public function notifications() {
+
+    public function notifications()
+    {
         return $this->belongsToMany('App\Models\InfectedNotification', 'infected_notifications', 'notifier_id', 'infected_id');
     }
 }
