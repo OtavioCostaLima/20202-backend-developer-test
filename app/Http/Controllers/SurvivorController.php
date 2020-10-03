@@ -23,8 +23,13 @@ class SurvivorController extends Controller
      */
     public function index()
     {
-        //  return $this->survivor->find(30)->inventory()->get();
-        return dd($this->survivor->find(4)->isContaminated());
+        try {
+            $survivor = $this->survivor->where('contaminated_count', '>=', 3)->get();
+            return response()->json($survivor, 200);
+        } catch (\Exception $e) {
+            DB::rollback();
+            return response()->json(['error' => 'Algo deu errado. Confira se as informações estão corretas!'], 400);
+        }
     }
 
     /**
