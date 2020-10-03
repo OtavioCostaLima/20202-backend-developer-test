@@ -151,6 +151,9 @@ Expemplo do Request:
 - 400 Bad Request: 'error': 'Algo deu errado. Confira se as informações estão corretas!'
 - 500   Internal server error
 ```
+## Testes Automatizados
+Você pode rodar os testes automatizados usando o comando 
+```php artisan test```.
 
 ## Tecnologias Utilizadas
 - [Laravel] - Plataforma de desenvolvimento
