@@ -21,14 +21,14 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 
 Route::prefix('/v1')->group(function () {
-    Route::get('/survivors/contamined', [SurvivorController::class, 'index']);
+    //Route::get('/survivors/contamined', [SurvivorController::class, 'index']);
     Route::post('/survivors', [SurvivorController::class, 'store']);
     Route::put('/survivors/{survivor_id}', [SurvivorController::class, 'update']);
     Route::post('/survivors/{survivor_id}/infected', [SurvivorController::class, 'notifyInfected']);
     
     Route::get('/reports/survivors', [ReportController::class, 'percentageSurvivors']);
     Route::get('/reports/resources', [ReportController::class, 'resourceAverage']);
-    Route::get('/reports/points/lost', [ReportController::class, 'lostPoints']);
+    Route::get('/reports/points/pointsLost', [ReportController::class, 'lostPoints']);
     
 
 
