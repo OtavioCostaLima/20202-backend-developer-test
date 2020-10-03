@@ -28,7 +28,7 @@ Route::prefix('/v1')->group(function () {
     
     Route::get('/reports/survivors', [ReportController::class, 'percentageSurvivors']);
     Route::get('/reports/resources', [ReportController::class, 'resourceAverage']);
-
+    Route::get('/reports/points/lost', [ReportController::class, 'lostPoints']);
     
 
 

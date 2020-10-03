@@ -18,9 +18,9 @@ class Survivor extends Model
         return $this->inventory();
     }
 
-    public function totalPoints()
+    public function totalPoints($id)
     {
-        return $this->find(1)->inventory()->get()->map(function ($item, $key) {
+        return $this->find($id)->inventory()->get()->map(function ($item, $key) {
             return $item->point * $item->pivot->quantity;
         })->sum();
     }

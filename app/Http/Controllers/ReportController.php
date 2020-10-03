@@ -54,11 +54,14 @@ class ReportController extends Controller
     {
         //podemos implementar um explode() no agregade para trazer não so o avg mas outros tipos em um array
         $agregate = $request->agregate ?? 'avg';
-        
+
         if ($agregate == 'avg') {
             try {
-                $result = DB::table('inventories')->selectRaw('description, round(avg(quantity),2) as media')
-                    ->join('items', 'items.id', '=', 'inventories.item_id')->groupBy('description')->get();
+                $result = DB::table('inventories')
+                    ->selectRaw('description, round(avg(quantity),2) as media')
+                    ->join('items', 'items.id', '=', 'inventories.item_id')
+                    ->groupBy('description')
+                    ->get();
                 return response()->json(['avg' => $result], 200);
             } catch (Exception $e) {
                 return response()->json(['error' => 'Algo deu errado. Tente novamente mais tarde!'], 500);
@@ -66,5 +69,21 @@ class ReportController extends Controller
         }
 
         return response()->json(['error' => 'Algo deu errado. Tente novamente mais tarde!'], 500);
+    }
+
+    public function lostPoints()
+    {
+        try {
+            //Legal é Criar Um Repository para separar a Persistencia do Controller 
+            $result = DB::table('inventories')->selectRaw('sum(quantity * point) lost_points')
+                ->join('survivors', 'survivors.id', '=', 'inventories.survivor_id')
+                ->join('items', 'items.id', '=', 'inventories.item_id')
+                ->where('contaminated_count', '>=', 3)
+                ->first();
+
+            return response()->json($result, 200);
+        } catch (Exception $e) {
+            return response()->json(['error' => 'Algo deu errado. Tente novamente mais tarde!'], 500);
+        }
     }
 }
