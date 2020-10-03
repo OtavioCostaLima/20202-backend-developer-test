@@ -27,6 +27,7 @@ Route::prefix('/v1')->group(function () {
     Route::post('/survivors/{survivor_id}/infected', [SurvivorController::class, 'notifyInfected']);
     
     Route::get('/reports/survivors', [ReportController::class, 'percentageSurvivors']);
+    Route::get('/reports/resources', [ReportController::class, 'resourceAverage']);
 
     
 
