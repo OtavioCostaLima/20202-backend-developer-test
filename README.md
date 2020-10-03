@@ -1,61 +1,169 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/d/total.svg" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/v/stable.svg" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/license.svg" alt="License"></a>
-</p>
+# Zombie Survival Social Network
 
-## About Laravel
+### API de Criação de sobreviventes
+> API desenvolvida para cadastrar os sobreviventes do apocalipse.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+####  Criação de sobreviventes
+```sh
+POST /api/v1/survivors 
+Content-Type: application/json
+```
+Response:
+```json
+{  "name" : "string", 
+   "age" : "number",
+   "gender": "char",
+   "latitude": "number",
+   "longitude": "number",
+   "contaminated_count": "number",
+   "items": [   
+	{ "item_id": "number", "quantity": "number" },
+	{ "item_id": "number", "quantity": "number" }
+	] }
+```
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- Expemplo: 
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+```json
 
-## Learning Laravel
+{ "name" : "Otavio Costa Lima", "age" : 23
+ , "gender": "M"
+ , "latitude":   -22222666
+ , "longitude":   43434343
+ , "contaminated_count": 0
+, "items":   [   
+	{ "item_id": 1, "quantity": 3 },
+	{ "item_id": 3, "quantity": 1 }
+] }
+```
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### Atualizar localização do sobrevivente
+```sh
+PUT /api/v1/survivors/{survivor_id} HTTP/1.1
+Content-Type: application/json
+```
+Response:
+```json
+{  
+    "latitude": "number", 
+	"longitude": "number" 
+}
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+```
+- Expemplo: 
 
-## Laravel Sponsors
+```json
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+{ 
+ , "latitude":   -22222666
+ , "longitude":   43434343
+}
+```
 
-### Premium Partners
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[OP.GG](https://op.gg)**
+### Notificar infectado
 
-## Contributing
+```sh
+POST /api/v1/survivors/1/infected HTTP/1.1
+Content-Type: application/json
+```
+Response:
+```json
+{ "notifier_id": "number" }
+```
+- Expemplo: 
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+```json
 
-## Code of Conduct
+{ 
+  "notifier_id": 1
+}
+```
+#### Uso da API de Relatórios 
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### Percentual de sobreviventes infectados e não infectados
+```sh
+GET /api/v1/reports/survivors?infected={0 ou 1} HTTP/1.1
+Content-Type: application/json
+```
+- Parametros: 
+	-  infected: Caso queirar listar o percentual de infectados deve informar 1, mas se preferir listar os não infectados informe 0 ou deixe em sem nada.
 
-## Security Vulnerabilities
+Request:
+```json
+{
+  "percentage": "number"
+}
+```
+- Expemplo: 
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+```json
 
-## License
+{
+  "percentage": "83.33"
+}
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### Média total por item dos sobreviventes não infectados
+```sh
+GET /api/v1/reports/resources?agregate=avg HTTP/1.1
+Content-Type: application/json
+```
+- Parametros: 
+	-  agregate: Informe avg no paramentro para trazer a média total por items.
+
+Expemplo do Request:
+```json
+{
+  "avg": [
+    {
+      "description": "água",
+      "media": "3.00"
+    },
+    {
+      "description": "medicação",
+      "media": "1.33"
+    }
+  ]
+}
+```
+### Pontos perdidos por causa dos infectados infectados
+```sh
+GET /api/v1/reports/pointsLost HTTP/1.1
+Content-Type: application/json
+```
+Expemplo do Request:
+```json
+{
+  "lost_points": "16"
+}
+```
+
+
+
+```
+
+#### Mensagens de Retorno da API 
+
+```json
+- 200  Ok: "messagem": "Sobrevivente Cadastrado Com Sucesso!"
+- 400 Bad Request: 'error': 'Algo deu errado. Confira se as informações estão corretas!'
+- 500   Internal server error
+```
+## Testes Automatizados
+Você pode rodar os testes automatizados usando o comando 
+```php artisan test```.
+
+## Tecnologias Utilizadas
+- [Laravel] - Plataforma de desenvolvimento
+- [PostgreSQL] - Banco de dados
+
+- ### Instalação
+
+	- Faça o download do repositório e entre ne pelo terminal de comandos
+	- Rode o comando ```php artisan key:generate```;
+	- Crie uma cópia do arquivos ```.env.example```  e renomeie para ```.env```  e  configure seu bando de dados;
+	- Após configurar o seu bando é necessário gerar as tabelas com o comando:  ```php artisan migrate```;
+	- Também é necessário rodar a Seeder dos Itens com o comando: ```php artisan db:seed --class=ItemSeeder```;
+	- Em fim você pode rodar a aplicação com o comando ```php artisan serve```;
