@@ -142,6 +142,7 @@ class SurvivorController extends Controller
             }
 
             $notifier->notifications()->attach($survivor->id);
+            $survivor->update(['contaminated_count' => ++$survivor->contaminated_count]);
 
             return response()->json(['message' => 'Você marcou ' . $survivor->name . ' como infectado!'], 200);
         } catch (\Exception $e) {
