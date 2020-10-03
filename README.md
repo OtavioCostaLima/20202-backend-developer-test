@@ -167,3 +167,4 @@ Você pode rodar os testes automatizados usando o comando
 	- Após configurar o seu bando é necessário gerar as tabelas com o comando:  ```php artisan migrate```;
 	- Também é necessário rodar a Seeder dos Itens com o comando: ```php artisan db:seed --class=ItemSeeder```;
 	- Em fim você pode rodar a aplicação com o comando ```php artisan serve```;
+  
